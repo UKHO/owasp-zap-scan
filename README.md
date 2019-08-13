@@ -62,6 +62,6 @@ The chmod permissions are then reverted.
 
 ## License 
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/UKHO/owasp-zap-ui-scan/blob/master/LICENSE) file for details
- 
 
- 
+## Security Disclosure
+The UK Hydrographic Office (UKHO) collects and supplies hydrographic and geospatial data for the merchant shipping and the Royal Navy, to protect lives at sea. Maintaining the confidentially, integrity and availability of our services is paramount. Found a security bug? You might be saving a life by reporting it to us at UKHO-ITSO@ukho.gov.uk
