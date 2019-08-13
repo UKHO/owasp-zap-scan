@@ -15,7 +15,7 @@ steps:
 - task: CmdLine@2
   inputs:
     script: 'docker run --rm --mount type=bind,source=$(Build.ArtifactStagingDirectory),target=/zap/wrk/ -t owasp/zap2docker-stable zap-full-scan.py -t $(ApplicationUrl) -g gen.conf -r OWASP-Zap-Report.html -x Report.xml || true'
-  displayName: "Run Owasp Zap Full Scan"
+  displayName: "Run OWASP ZAP Full Scan"
 
 - task: CmdLine@2
   inputs:
@@ -27,14 +27,14 @@ steps:
     testResultsFormat: 'NUnit'
     testResultsFiles: 'Converted-OWASP-ZAP-Report.xml'
     searchFolder: '$(Build.ArtifactStagingDirectory)'
-  displayName: "Publish Owasp Zap Test Report"
+  displayName: "Publish OWASP ZAP Test Report"
 
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'Owasp Zap HTML Report'
     publishLocation: 'Container'
-  displayName: "Publish Owasp Zap Report"
+  displayName: "Publish OWASP ZAP Report"
 
 - task: CmdLine@2
   inputs:
