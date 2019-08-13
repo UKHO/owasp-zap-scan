@@ -1,5 +1,5 @@
 # OWASP ZAP UI Automated Scanning :zap:
-> :exclamation: **ONLY RUN THIS AGAINST APPLICATIONS YOU HAVE PERMISSION TO ATTACK**
+:exclamation: :exclamation:  **ONLY RUN THIS AGAINST APPLICATIONS YOU HAVE PERMISSION TO ATTACK** :exclamation: :exclamation:
 
 Provides the ability to execute a [Full Scan](https://github.com/zaproxy/zaproxy/wiki/ZAP-Full-Scan]) against a web application using the OWASP ZAP Docker image within a Azure DevOps pipeline. This generates the standard OWASP ZAP Html report and an NUnit test report to publish the results to the pipeline. 
 
