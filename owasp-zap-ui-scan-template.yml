@@ -1,5 +1,5 @@
 parameters:
-  app-url: ''
+  url: ''
 
 jobs:
 - job: Run Owasp Zap Scan
@@ -16,7 +16,7 @@ jobs:
 
   - task: CmdLine@2
     inputs:
-      script: 'docker run --rm --mount type=bind,source=$(Build.ArtifactStagingDirectory),target=/zap/wrk/ -t owasp/zap2docker-stable zap-full-scan.py -t ${{ parameters['app-url'] }} -g gen.conf -r OWASP-Zap-Report.html -x Report.xml || true'
+      script: 'docker run --rm --mount type=bind,source=$(Build.ArtifactStagingDirectory),target=/zap/wrk/ -t owasp/zap2docker-stable zap-full-scan.py -t ${{ parameters.url }} -g gen.conf -r OWASP-Zap-Report.html -x Report.xml || true'
     continueOnError: true
     displayName: "Run OWASP ZAP Full Scan"
 
