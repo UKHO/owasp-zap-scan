@@ -2,7 +2,7 @@ parameters:
   url: ''
 
 jobs:
-- job: Run Owasp Zap Scan
+- job: Run_Owasp_Zap_Scan
   pool: UKHO Ubuntu 1804
 
   workspace:
