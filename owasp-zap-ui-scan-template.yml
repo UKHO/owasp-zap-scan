@@ -16,8 +16,11 @@ jobs:
   
   - script: |
       wget  -O $(Build.ArtifactStagingDirectory)/ZapTransform.ps1 "https://raw.githubusercontent.com/UKHO/owasp-zap-ui-scan/master/src/ZapTransform.ps1"
-      cd $(Build.ArtifactStagingDirectory)
-      ls
+    displayName: "Download ZapTransform.ps1 to Build.ArtifactStagingDirectory"  
+    
+  - script: |
+      wget  -O $(Build.ArtifactStagingDirectory)/ZapTransformTemplate.xslt "https://raw.githubusercontent.com/UKHO/owasp-zap-ui-scan/master/src/ZapTransformTemplate.xslt"
+    displayName: "Download ZapTransformTemplate.xslt to Build.ArtifactStagingDirectory"      
 
   - task: CmdLine@2
     inputs:
