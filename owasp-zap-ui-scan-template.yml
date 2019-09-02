@@ -42,7 +42,7 @@ jobs:
 
   - task: PublishBuildArtifacts@1
     inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)\\OWASP-Zap-Report.html'
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/OWASP-Zap-Report.html'
       ArtifactName: 'Owasp Zap HTML Report'
       publishLocation: 'Container'
     displayName: "Publish OWASP ZAP Report"
