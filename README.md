@@ -13,7 +13,7 @@ These instructions will enable you to get the [Full Scan](https://github.com/zap
 Docker needs to be installed on the machine the agent will be running on.
 
 ### Incorporate into an Azure DevOps Pipeline - UKHO
-This can be incorpated into an Azure Devops Pipeline by copying the [azure-pipelines.yml](https://github.com/UKHO/owasp-zap-ui-scan/blob/master/azure-pipelines.yml) and using this within a pipeline created against your repository for running the Zap scan. 
+This can be incorporated into an Azure Devops Pipeline by copying the [azure-pipelines.yml](https://github.com/UKHO/owasp-zap-ui-scan/blob/master/azure-pipelines.yml) and using this within a pipeline created against your repository for running the Zap scan. 
 
 All that needs to be done is to add a pipeline variable called **ApplicationUrl**, which will be the base URL of the application under test.
 
@@ -29,11 +29,11 @@ All that needs to be done is to add a pipeline variable called **ApplicationUrl*
 	  parameters:
 	  url: $(ApplicationUrl)
 	  
-This yaml will use the contents of the master branch for this repository, using [owasp-zap-ui-scan-template.yml](https://github.com/UKHO/owasp-zap-ui-scan/blob/master/owasp-zap-ui-scan-template.yml), [ZapTransform.ps1](https://github.com/UKHO/owasp-zap-ui-scan/blob/master/src/ZapTransform.ps1) and [ZapTransformTemplate.xslt](https://github.com/UKHO/owasp-zap-ui-scan/blob/master/src/ZapTransformTemplate.xslt) on the master branch of this repository. 
+This yaml will use the contents of the master branch for this repository, using [owasp-zap-ui-scan-template.yml](https://github.com/UKHO/owasp-zap-ui-scan/blob/master/owasp-zap-ui-scan-template.yml), [ZapTransform.ps1](https://github.com/UKHO/owasp-zap-ui-scan/blob/master/src/ZapTransform.ps1) and [ZapTransformTemplate.xslt](https://github.com/UKHO/owasp-zap-ui-scan/blob/master/src/ZapTransformTemplate.xslt). 
 
 ### Incorporate into an Azure DevOps Pipeline - External to UKHO
 
-<p align="center"> <br> :construction: <b> UNDER CONSTRUCTION </b> :construction: <br><br> </p>
+<br> :construction: <b> UNDER CONSTRUCTION </b> :construction: <br><br>
 
 ### The YAML file explained 
 The yaml template [(owasp-zap-ui-scan-template.yml)](https://github.com/UKHO/owasp-zap-ui-scan/blob/master/owasp-zap-ui-scan-template.yml) needs the url parameter passed in, this will be the base URL for the application under test.
