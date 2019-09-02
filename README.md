@@ -12,8 +12,55 @@ These instructions will enable you to get the [Full Scan](https://github.com/zap
 ### Pre-requisites
 Docker needs to be installed on the machine the agent will be running on.
 
-### The YAML file explained
-This first stage ensures that the agent has access to the pre-defined $(Build.ArtifactStagingDirectory) location, this may or may not be needed - this is used here as we are running on Linux.
+### Incorporate into an Azure DevOps Pipeline - UKHO
+This can be incorporated into an Azure Devops Pipeline by copying the [azure-pipelines.yml](https://github.com/UKHO/owasp-zap-ui-scan/blob/master/azure-pipelines.yml) and using this within a pipeline created against your repository for running the Zap scan. 
+
+All that needs to be done is to add a pipeline variable called **ApplicationUrl**, which will be the base URL of the application under test.
+
+    resources:
+	    repositories:
+		    - repository: owaspzapui
+		      type: github
+		      endpoint: UKHO
+		      name: UKHO/owasp-zap-ui-scan
+		      ref: refs/heads/master
+	jobs:
+	- template: owasp-zap-ui-scan-template.yml@owaspzapui
+	  parameters:
+	  url: $(ApplicationUrl)
+	  
+This yaml will use the contents of the master branch for this repository, using [owasp-zap-ui-scan-template.yml](https://github.com/UKHO/owasp-zap-ui-scan/blob/master/owasp-zap-ui-scan-template.yml), [ZapTransform.ps1](https://github.com/UKHO/owasp-zap-ui-scan/blob/master/src/ZapTransform.ps1) and [ZapTransformTemplate.xslt](https://github.com/UKHO/owasp-zap-ui-scan/blob/master/src/ZapTransformTemplate.xslt). 
+
+### Incorporate into an Azure DevOps Pipeline - External to UKHO
+
+<br> :construction: <b> UNDER CONSTRUCTION </b> :construction: <br><br>
+
+### The YAML file explained 
+The yaml template [(owasp-zap-ui-scan-template.yml)](https://github.com/UKHO/owasp-zap-ui-scan/blob/master/owasp-zap-ui-scan-template.yml) needs the url parameter passed in, this will be the base URL for the application under test.
+
+    parameters:
+      url: ''
+
+A single job is executed called Run_Owasp_Zap_Scan, this will execute the steps defined below
+
+    jobs:    
+    - job: Run_Owasp_Zap_Scan
+      pool: UKHO Ubuntu 1804
+      
+      workspace:
+        clean: all
+
+The first stage is to copy the files ZapTransform.ps1 and ZapTransformTemplate.xslt into the Build.ArtifactStagingDirectory of the repo that is using the template. This allows the template to access the files, as the template yaml is essentially cloned into the repository that is referencing it.
+
+    - script: |
+        wget -O $(Build.ArtifactStagingDirectory)/ZapTransform.ps1 "https://raw.githubusercontent.com/UKHO/owasp-zap-ui-scan/master/src/ZapTransform.ps1"
+      displayName: "Download ZapTransform.ps1 to ArtifactStagingDirectory"
+      
+    - script: |
+        wget -O $(Build.ArtifactStagingDirectory)/ZapTransformTemplate.xslt "https://raw.githubusercontent.com/UKHO/owasp-zap-ui-scan/master/src/ZapTransformTemplate.xslt"
+      displayName: "Download ZapTransformTemplate.xslt to ArtifactStagingDirectory"
+
+This next stage ensures that the agent has access to the pre-defined $(Build.ArtifactStagingDirectory) location, this may or may not be needed - this is used here as we are running on Linux.
 
     - task: CmdLine@2
       inputs:
@@ -56,10 +103,6 @@ The chmod permissions are then reverted.
       inputs:
           script: 'chmod 755 -R $(Build.ArtifactStagingDirectory)'
       displayName: "Revert chmod permissions (ArtifactStagingDirectory)"
-
-### Incorporate into an Azure DevOps Pipeline
-
-<p align="center"> <br> :construction: <b> UNDER CONSTRUCTION </b> :construction: <br><br> </p>
 
 ## References
  - [OWASP ZAP](https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project)
