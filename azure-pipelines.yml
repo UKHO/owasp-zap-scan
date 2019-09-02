@@ -4,7 +4,7 @@ resources:
       type: github
       endpoint: UKHO
       name: UKHO/owasp-zap-ui-scan
-      ref: refs/heads/rework-yaml-file
+      ref: refs/heads/master
 
 jobs:
 - template: owasp-zap-ui-scan-template.yml@owaspzapui
