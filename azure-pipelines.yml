@@ -1,42 +1,12 @@
-trigger:
-- master
+resources:
+  repositories:
+    - repository: owaspzapui
+      type: github
+      endpoint: UKHO
+      name: UKHO/owasp-zap-ui-scan
+      ref: refs/heads/master
 
-pool: UKHO Ubuntu 1804
-
-workspace:
-  clean: all
-
-steps:
-- task: CmdLine@2
-  inputs:
-    script: 'chmod 777 -R $(Build.ArtifactStagingDirectory)'
-  displayName: "Set chmod permissions (ArtifactStagingDirectory)"
-
-- task: CmdLine@2
-  inputs:
-    script: 'docker run --rm --mount type=bind,source=$(Build.ArtifactStagingDirectory),target=/zap/wrk/ -t owasp/zap2docker-stable zap-full-scan.py -t $(ApplicationUrl) -g gen.conf -r OWASP-Zap-Report.html -x Report.xml || true'
-  displayName: "Run OWASP ZAP Full Scan"
-
-- task: CmdLine@2
-  inputs:
-    script:  docker run --rm --mount type=bind,source=$(Build.SourcesDirectory)/src,target=/tmp/nunit/ --mount type=bind,source=$(Build.ArtifactStagingDirectory),target=/tmp/report/ mcr.microsoft.com/powershell:ubuntu-18.04 pwsh -File '/tmp/nunit/ZapTransform.ps1'
-  displayName: "Create Nunit Test Report"
-
-- task: PublishTestResults@2
-  inputs:
-    testResultsFormat: 'NUnit'
-    testResultsFiles: 'Converted-OWASP-ZAP-Report.xml'
-    searchFolder: '$(Build.ArtifactStagingDirectory)'
-  displayName: "Publish OWASP ZAP Test Report"
-
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'Owasp Zap HTML Report'
-    publishLocation: 'Container'
-  displayName: "Publish OWASP ZAP Report"
-
-- task: CmdLine@2
-  inputs:
-    script: 'chmod 755 -R $(Build.ArtifactStagingDirectory)'
-  displayName: "Revert chmod permissions (ArtifactStagingDirectory)"
+jobs:
+- template: owasp-zap-ui-scan-template.yml@owaspzapui
+  parameters:
+    url: $(ApplicationUrl)
