@@ -12,15 +12,15 @@ jobs:
   - task: CmdLine@2
     inputs:
       script: 'chmod 777 -R $(Build.ArtifactStagingDirectory)'
-    displayName: "Set chmod permissions (ArtifactStagingDirectory)"
+    displayName: "Set chmod permissions for ArtifactStagingDirectory"
   
   - script: |
       wget  -O $(Build.ArtifactStagingDirectory)/ZapTransform.ps1 "https://raw.githubusercontent.com/UKHO/owasp-zap-ui-scan/master/src/ZapTransform.ps1"
-    displayName: "Download ZapTransform.ps1 to Build.ArtifactStagingDirectory"  
+    displayName: "Download ZapTransform.ps1 to ArtifactStagingDirectory"  
     
   - script: |
       wget  -O $(Build.ArtifactStagingDirectory)/ZapTransformTemplate.xslt "https://raw.githubusercontent.com/UKHO/owasp-zap-ui-scan/master/src/ZapTransformTemplate.xslt"
-    displayName: "Download ZapTransformTemplate.xslt to Build.ArtifactStagingDirectory"      
+    displayName: "Download ZapTransformTemplate.xslt to ArtifactStagingDirectory"      
 
   - task: CmdLine@2
     inputs:
@@ -45,9 +45,9 @@ jobs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)/OWASP-Zap-Report.html'
       ArtifactName: 'Owasp Zap HTML Report'
       publishLocation: 'Container'
-    displayName: "Publish OWASP ZAP Report"
+    displayName: "Publish OWASP ZAP HTML Report"
 
   - task: CmdLine@2
     inputs:
       script: 'chmod 755 -R $(Build.ArtifactStagingDirectory)'
-    displayName: "Revert chmod permissions (ArtifactStagingDirectory)"
+    displayName: "Revert chmod permissions for ArtifactStagingDirectory"
