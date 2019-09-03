@@ -1,8 +1,9 @@
 parameters:
-  url: ''
+  swaggerDefUrl: ''
+  definitionFormat: 'openapi'
 
 jobs:
-- job: Run_Owasp_Zap_UI_Full_Scan
+- job: Run_Owasp_Zap_API_Scan
   pool: UKHO Ubuntu 1804
 
   workspace:
@@ -24,9 +25,9 @@ jobs:
 
   - task: CmdLine@2
     inputs:
-      script: 'docker run --rm --mount type=bind,source=$(Build.ArtifactStagingDirectory),target=/zap/wrk/ -t owasp/zap2docker-stable zap-full-scan.py -t ${{ parameters.url }} -g gen.conf -r OWASP-Zap-Report.html -x Report.xml || true'
+      script: 'docker run --rm --mount type=bind,source=$(Build.ArtifactStagingDirectory),target=/zap/wrk/ -t owasp/zap2docker-stable zap-api-scan.py -t ${{ parameters.swaggerDefUrl }} -f ${{ parameters.definitionFormat }} -g gen.conf -r OWASP-Zap-Report.html -x Report.xml || true'
     continueOnError: true
-    displayName: "Run OWASP ZAP UI Full Scan"
+    displayName: "Run OWASP ZAP API Scan"
 
   - task: CmdLine@2
     inputs:
@@ -38,14 +39,14 @@ jobs:
       testResultsFormat: 'NUnit'
       testResultsFiles: 'Converted-OWASP-ZAP-Report.xml'
       searchFolder: '$(Build.ArtifactStagingDirectory)'
-    displayName: "Publish OWASP ZAP UI Test Report"
+    displayName: "Publish OWASP ZAP API Test Report"
 
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)/OWASP-Zap-Report.html'
       ArtifactName: 'Owasp Zap HTML Report'
       publishLocation: 'Container'
-    displayName: "Publish OWASP ZAP UI HTML Report"
+    displayName: "Publish OWASP ZAP API HTML Report"
 
   - task: CmdLine@2
     inputs:
