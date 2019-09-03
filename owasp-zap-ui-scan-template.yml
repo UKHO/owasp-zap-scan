@@ -2,7 +2,7 @@ parameters:
   url: ''
 
 jobs:
-- job: Run_Owasp_Zap_Scan
+- job: Run_Owasp_Zap_UI_Full_Scan
   pool: UKHO Ubuntu 1804
 
   workspace:
@@ -15,18 +15,18 @@ jobs:
     displayName: "Set chmod permissions for ArtifactStagingDirectory"
   
   - script: |
-      wget  -O $(Build.ArtifactStagingDirectory)/ZapTransform.ps1 "https://raw.githubusercontent.com/UKHO/owasp-zap-ui-scan/master/src/ZapTransform.ps1"
+      wget  -O $(Build.ArtifactStagingDirectory)/ZapTransform.ps1 "https://raw.githubusercontent.com/UKHO/owasp-zap-scan/master/src/ZapTransform.ps1"
     displayName: "Download ZapTransform.ps1 to ArtifactStagingDirectory"  
     
   - script: |
-      wget  -O $(Build.ArtifactStagingDirectory)/ZapTransformTemplate.xslt "https://raw.githubusercontent.com/UKHO/owasp-zap-ui-scan/master/src/ZapTransformTemplate.xslt"
+      wget  -O $(Build.ArtifactStagingDirectory)/ZapTransformTemplate.xslt "https://raw.githubusercontent.com/UKHO/owasp-zap-scan/master/src/ZapTransformTemplate.xslt"
     displayName: "Download ZapTransformTemplate.xslt to ArtifactStagingDirectory"      
 
   - task: CmdLine@2
     inputs:
       script: 'docker run --rm --mount type=bind,source=$(Build.ArtifactStagingDirectory),target=/zap/wrk/ -t owasp/zap2docker-stable zap-full-scan.py -t ${{ parameters.url }} -g gen.conf -r OWASP-Zap-Report.html -x Report.xml || true'
     continueOnError: true
-    displayName: "Run OWASP ZAP Full Scan"
+    displayName: "Run OWASP ZAP UI Full Scan"
 
   - task: CmdLine@2
     inputs:
@@ -38,14 +38,14 @@ jobs:
       testResultsFormat: 'NUnit'
       testResultsFiles: 'Converted-OWASP-ZAP-Report.xml'
       searchFolder: '$(Build.ArtifactStagingDirectory)'
-    displayName: "Publish OWASP ZAP Test Report"
+    displayName: "Publish OWASP ZAP UI Test Report"
 
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)/OWASP-Zap-Report.html'
       ArtifactName: 'Owasp Zap HTML Report'
       publishLocation: 'Container'
-    displayName: "Publish OWASP ZAP HTML Report"
+    displayName: "Publish OWASP ZAP UI HTML Report"
 
   - task: CmdLine@2
     inputs:
