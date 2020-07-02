@@ -1,8 +1,10 @@
 parameters:
   url: ''
+  - name: publishAsTestResults
+    type: boolean
 
 jobs:
-- job: Run_Owasp_Zap_UI_Full_Scan
+- job: RunOwaspZapUiFullScan
   pool: UKHO Ubuntu 1804
 
   workspace:
@@ -29,11 +31,13 @@ jobs:
     displayName: "Run OWASP ZAP UI Full Scan"
 
   - task: CmdLine@2
+    condition: and(succeeded(), eq('${{ parameters.publishAsTestResults }}', true))
     inputs:
       script:  docker run --rm --mount type=bind,source=$(Build.ArtifactStagingDirectory),target=/tmp/nunit/ --mount type=bind,source=$(Build.ArtifactStagingDirectory),target=/tmp/report/ mcr.microsoft.com/powershell:ubuntu-18.04 pwsh -File '/tmp/nunit/ZapTransform.ps1'
     displayName: "Create Nunit Test Report"
 
   - task: PublishTestResults@2
+    condition: and(succeeded(), eq('${{ parameters.publishAsTestResults }}', true))
     inputs:
       testResultsFormat: 'NUnit'
       testResultsFiles: 'Converted-OWASP-ZAP-Report.xml'
