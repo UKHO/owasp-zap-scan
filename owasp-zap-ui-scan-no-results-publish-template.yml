@@ -1,0 +1,41 @@
+parameters:
+  url: ''
+
+jobs:
+- job: RunOwaspZapUIFullScan
+  pool: UKHO Ubuntu 1804
+
+  workspace:
+    clean: all
+
+  steps:
+  - task: CmdLine@2
+    inputs:
+      script: 'chmod 777 -R $(Build.ArtifactStagingDirectory)'
+    displayName: "Set chmod permissions for ArtifactStagingDirectory"
+  
+  - script: |
+      wget  -O $(Build.ArtifactStagingDirectory)/ZapTransform.ps1 "https://raw.githubusercontent.com/UKHO/owasp-zap-scan/master/src/ZapTransform.ps1"
+    displayName: "Download ZapTransform.ps1 to ArtifactStagingDirectory"  
+    
+  - script: |
+      wget  -O $(Build.ArtifactStagingDirectory)/ZapTransformTemplate.xslt "https://raw.githubusercontent.com/UKHO/owasp-zap-scan/master/src/ZapTransformTemplate.xslt"
+    displayName: "Download ZapTransformTemplate.xslt to ArtifactStagingDirectory"      
+
+  - task: CmdLine@2
+    inputs:
+      script: 'docker run --rm --mount type=bind,source=$(Build.ArtifactStagingDirectory),target=/zap/wrk/ -t owasp/zap2docker-stable zap-full-scan.py -t ${{ parameters.url }} -g gen.conf -r OWASP-Zap-Report.html -x Report.xml || true'
+    continueOnError: true
+    displayName: "Run OWASP ZAP UI Full Scan"
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/OWASP-Zap-Report.html'
+      ArtifactName: 'Owasp Zap HTML Report'
+      publishLocation: 'Container'
+    displayName: "Publish OWASP ZAP UI HTML Report"
+
+  - task: CmdLine@2
+    inputs:
+      script: 'chmod 755 -R $(Build.ArtifactStagingDirectory)'
+    displayName: "Revert chmod permissions for ArtifactStagingDirectory"
