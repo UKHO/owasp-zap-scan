@@ -10,3 +10,4 @@ jobs:
 - template: owasp-zap-api-scan-template.yml@owaspzapapi
   parameters:
     url: $(SwaggerDefUrl)
+    publishAsTestResults: true
