@@ -1,8 +1,6 @@
 parameters:
   - name: url
-    type: string
   - name: publishAsTestResults
-    type: boolean
   
 jobs:
   - job: RunOwaspZapUiFullScan
